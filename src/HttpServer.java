@@ -118,10 +118,7 @@ public class HttpServer {
                 String content = servlet.doRequest(requestUrl,requestStr);//servlet 的 content
                 writeToclient(clientOut,"text/html",200,"OK",content.getBytes());
 
-            } catch (ClassNotFoundException e) {
-                writeToclient(clientOut,"text/html",404,"Not Found","<h1>该文件找不到哦</h1>".getBytes());
-                return;
-            } catch (InstantiationException e) {
+            } catch (ClassNotFoundException | InstantiationException e) {
                 writeToclient(clientOut,"text/html",404,"Not Found","<h1>该文件找不到哦</h1>".getBytes());
                 return;
             } catch (IllegalAccessException e) {
@@ -147,7 +144,13 @@ public class HttpServer {
             contentType = "image/jpeg";
         } else if (requestUrl.indexOf("gif") != -1) {
             contentType = "image/gif";
-        } else {
+        } else if (requestUrl.indexOf("mp4")!=-1) {
+            contentType = "video/mp4";
+        }else if (requestUrl.endsWith("css")) {
+            contentType = "text/css";
+        } else if (requestUrl.endsWith("js")) {
+            contentType = "text/javascript";
+        }else {
             contentType = "application/octet-stream";//字节流类型
         }
         String resourcePath = requestUrl.equals("/" ) ? "index.html" : requestUrl.substring(1);
